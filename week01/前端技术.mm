@@ -1267,7 +1267,7 @@
 		</node>
 		</node>
 		</node>
-		<node TEXT="CSS" ID="3db171642a0b7f01" STYLE="bubble" POSITION="left">
+		<node TEXT="CSS" ID="3db171642a0b7f01" STYLE="bubble" POSITION="right">
 		<node TEXT="语法/词法" ID="22a171647043c201e" STYLE="fork">
 		</node>
 		<node TEXT="@规则" ID="c717164766a9c0c4" STYLE="fork">
@@ -1317,6 +1317,10 @@
 		</node>
 		<node TEXT="Events" ID="3e41716482ac2a01" STYLE="fork">
 		</node>
+		</node>
+		<node TEXT="CSSOM" ID="211717b16dca70f6" STYLE="fork">
+		</node>
+		<node TEXT="事件" ID="491717b170cdc042" STYLE="fork">
 		</node>
 		<node TEXT="Web Platform API" ID="48171648902dc121" STYLE="fork">
 		<node TEXT="Ambient Light API" ID="2961716489396913c" STYLE="fork">
@@ -1385,6 +1389,26 @@
 		</node>
 		<node TEXT="XMLHttpRequest (XHR) API" ID="1e1716489445d0dd32" STYLE="fork">
 		</node>
+		</node>
+		</node>
+		<node TEXT="浏览器原理" ID="16a1717b14336e18f" STYLE="bubble" POSITION="left">
+		<node TEXT="解析" ID="1851717b14c64b104" STYLE="fork">
+		</node>
+		<node TEXT="构建DOM树" ID="3e51717b14dfaf0c9" STYLE="fork">
+		</node>
+		<node TEXT="构建CSSOM树" ID="10c1717b14fbfd105" STYLE="fork">
+		</node>
+		<node TEXT="渲染、绘制" ID="1a11717b151276074" STYLE="fork">
+		</node>
+		</node>
+		<node TEXT="前端工程" ID="1a1717b1466bd123" STYLE="bubble" POSITION="left">
+		<node TEXT="性能" ID="3821717b155c34075" STYLE="fork">
+		</node>
+		<node TEXT="工具链" ID="51717b157a42007" STYLE="fork">
+		</node>
+		<node TEXT="CI/CD" ID="1811717b1592a310a" STYLE="fork">
+		</node>
+		<node TEXT="架构与基础库" ID="37e1717b15b3a718e" STYLE="fork">
 		</node>
 		</node>
 </node>
