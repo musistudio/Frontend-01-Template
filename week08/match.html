@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>match</title>
+    <style>
+        div#id #t1{
+            color: yellow;
+        }
+    </style>
+  </head>
+  <body>
+
+    <div id="id" class="class">
+        <div class="class" id="t1">123</div>
+    </div>
+    <script>
+      function match(selector, element) {
+          console.log(selector, element)
+          let result = true;
+          let selectors = selector.match(/\.*#*[a-zA-Z]+\d*/g).reverse().map(slt => {
+              let index = selector.indexOf(slt);
+              let level;
+              if(index !== 0) {
+                  let symbol = selector[index-1];
+                  if(symbol == ' ') {
+                      level = 'children'
+                  }else if(symbol == '>') {
+                      level = 'brother'
+                  }else if(/^[a-zA-Z]/.test(symbol)) {
+                      level = 'and'
+                  }
+              }else{
+                  level = 'root'
+              }
+              if(slt.startsWith('.')) {
+                  return {
+                      type: 'class',
+                      name: slt.replace('.', ''),
+                      level
+                  }
+              }else if(slt.startsWith('#')) {
+                  return {
+                      type: 'id',
+                      name: slt.replace('#', ''),
+                      level
+                  }
+              }else if(/^[a-zA-Z]/.test(slt)) {
+                  return {
+                      type: 'tagName',
+                      name: slt.replace('#', ''),
+                      level
+                    }
+              }
+          });
+          let current_level = [];
+          selectors.forEach(slt => {
+              if(current_level.length) {
+                  if(current_level.pop() == 'children') {
+                    element = element.parentElement
+                  }
+              }
+              let {tagName, classList, id} = element;
+                classList = [...classList];
+              if(slt.type == 'class') {
+                  if(classList.indexOf(slt.name) === -1) {
+                    result = false
+                  }
+              }else if(slt.type == 'id') {
+                if(id != slt.name) {
+                    result = false
+                  }
+              }else if(slt.type == 'tagName') {
+                if(tagName.toLowerCase() != slt.name) {
+                    result = false
+                  }
+              }
+              current_level.push(slt.level)
+          })
+          return result;
+      }
+
+    let a = match('div#id .class#t1', document.getElementById('t1'))
+    console.log(a)
+    </script>
+  </body>
+</html>
