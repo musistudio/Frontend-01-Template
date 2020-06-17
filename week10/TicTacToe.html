@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>井字棋</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #main{
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        .row{
+            width: 300px;
+            height: 100px;
+            display: flex;
+        }
+        .col{
+            width: 100px;
+            height: 100px;
+            line-height: 80px;
+            font-size: 50px;
+            color: red;
+            background: lightskyblue;
+            text-align: center;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+    <script>
+        let pattern = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ];
+        let color = 2;
+        function show() {
+            let ele = document.querySelector('#main');
+            ele.innerHTML = '';
+            for(let i = 0; i < 3; i++) {
+                let row = document.createElement('div');
+                row.classList.add('row');
+                for(let j = 0; j < 3; j++) {
+                    let col = document.createElement('div');
+                    col.classList.add('col')
+                    col.innerHTML = 
+                        pattern[i][j] == 2 ? 'x' :
+                        pattern[i][j] == 1 ? 'o' :
+                        '';
+                    col.addEventListener('click', () => userMove(i, j))
+                    row.appendChild(col);
+                }
+                ele.appendChild(row)
+            }
+        }
+
+        function userMove(x, y){
+            if(pattern[x][y] !== 0) return;
+            pattern[x][y] = color;
+            let winer = 
+                color == 2 ? 'x' :
+                color == 1 ? 'o' :
+                '';
+            show();
+            if(check(pattern, x, y)) setTimeout(()=>{alert(`${winer} is win!`)}, 0)
+            color = 3 - color;
+            computerMove();
+        }
+
+        function computerMove(x, y){
+            let choice = bestChoice(pattern, color);
+            if(choice.point) {
+                pattern[choice.point[0]][choice.point[1]] = color
+            }
+            show();
+            color = 3 - color;
+        }
+
+        function check(pattern, x, y) {
+            let row = pattern[x];
+            let col = pattern.map(p => p[y]);
+            let res = false;
+            // 横
+            res = row.every((value, index) => (value === row[0] && row[0] != 0));
+            // 竖
+            res || (res = col.every((value, index) => value === col[0]));
+            // 斜
+            if(!res && x % 2 === 0 && y % 2 === 0 && pattern[x][y] == pattern[1][1] &&  pattern[1][1] == pattern[2-x][2-y]) res = true;
+            return res;
+        }
+
+        function willWin(pattern, color) {
+            let res = null;
+            for(let i=0;i<3;i++){
+                let row = pattern[i];
+                let col = pattern.map(p => p[i]);
+                // 横
+                if(row.filter(value => value == color).length === 2 && row.includes(0)) res = {point: [i, row.indexOf(0)]};
+                // 竖
+                if(!res && col.filter(value => value == color).length === 2 && col.includes(0)) res = {point: [col.indexOf(0), i]};
+                // 斜
+                if(!res && i % 2 === 0) {
+                    let diagonal = [pattern[i][0], pattern[1][1], pattern[2-i][2]]
+                    if(eval(diagonal.join('+')) == 2 * color && !diagonal.includes(3-color) && diagonal.includes(0)) {
+                        let p = diagonal.indexOf(0);
+                        let point = p === 0 ? [i, 0] : 
+                                    p === 1 ? [1, 1] :
+                                    p === 2 ? [2-i, 2] : null
+                        res = {
+                            point: point
+                        };
+                    }
+                }
+            }
+            return res
+        }
+
+        function bestChoice(pattern, color) {
+            let point = willWin(pattern, color);
+            if(point) {
+                return {
+                    point: point.point,
+                    result: 1
+                }
+            }
+            let result = -1;
+            outer:for(let i = 0; i < 3; i++) {
+                for(let j = 0; j < 3; j++) {
+                    if(pattern[i][j] !==0) 
+                        continue;
+                    let tmp = JSON.parse(JSON.stringify(pattern));
+                    tmp[i][j] = color;
+                    let opp = bestChoice(tmp, 3 - color);
+                    if(- opp.result >= result) {
+                        point = [i, j];
+                        result = - opp.result
+                    }
+                    if(result == 1)
+                        break outer; 
+                }
+            }
+            return {
+                point: point,
+                result: point ? result : 0
+            }
+        }
+
+        show();
+    </script>
+</body>
+</html>
