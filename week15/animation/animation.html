@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>animation</title>
+    <style>
+        #el{
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+        }
+        #el2{
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="el"></div>
+    <div id="el2"></div>
+    <button id="pause-button">pause</button>
+    <button id="resume-button">resume</button>
+    <button id="el2-start-button">el2 start</button>
+
+    <script type="module">
+        import {Timeline, Animation, ColorAnimation} from './animation.js';
+        import {cubicBezier} from './cubicBezier.js';
+
+        let liner = t => t;
+        let ease = cubicBezier(.25, .1, .25, 1);
+        let el = document.querySelector('#el');
+        let el2 = document.querySelector('#el2');
+
+        let t1 = new Timeline;
+        t1.add(new Animation(el.style, 'transform', 0, 200, 5000, 0, liner, v => `translateX(${v}px)`))
+        t1.start();
+
+        document.querySelector('#pause-button').addEventListener('click', () => {
+            t1.pause();
+        })
+
+        document.querySelector('#resume-button').addEventListener('click', () => {
+            t1.resume();
+        })
+
+        document.querySelector('#el2-start-button').addEventListener('click', () => {
+            t1.add(new ColorAnimation(el.style, 'backgroundColor', {r:0, g:0, b:0, a:1}, {r:255, g:0, b:0, a:1}, 5000, 0, liner))
+        })
+
+
+        
+    </script>
+</body>
+</html>
